@@ -1,23 +1,41 @@
 import dotenv from "dotenv";
-import { Schema } from "mongoose";
+import axios from "axios";
 
 import Client from "../models/Client";
 import Policy from "../models/Policy";
-import client_seed from "../../data/clients";
-import policy_seed from "../../data/policies";
 
 dotenv.config();
-const ObjectIDType = Schema.Types.ObjectID;
+
+const { CLIENTS_URL, POLICIES_URL } = process.env;
 
 export const setupDB = async () => {
   try {
     await Client.deleteMany({}).exec();
     await Policy.deleteMany({}).exec();
-    await processClients(client_seed);
-    await processPolicies(policy_seed);
+    const clients = await getClientData();
+    const policies = await getPolicyData();
+    await processClients(clients);
+    await processPolicies(policies);
   } catch (e) {
-    console.log(e);
     throw new Error(`Error seeding DB: ${e.message}`);
+  }
+};
+
+const getClientData = async () => {
+  try {
+    const results = await axios.get(CLIENTS_URL);
+    return results.data.clients;
+  } catch (e) {
+    throw new Error(`Error getting client data: ${e.message}`);
+  }
+};
+
+const getPolicyData = async () => {
+  try {
+    const results = await axios.get(POLICIES_URL);
+    return results.data.policies;
+  } catch (e) {
+    throw new Error(`Error getting policy data: ${e.message}`);
   }
 };
 
