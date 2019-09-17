@@ -5,6 +5,7 @@ import cors from 'cors'
 import http from 'http'
 import mongoose from 'mongoose'
 import routes from './routes'
+import {setupDB} from "./db"
 
 dotenv.config()
 
@@ -24,9 +25,12 @@ mongoose.connect(DATABASE_URL, { useNewUrlParser: true }, (err, _) => {
   app.use("/api", routes());
 
   const server = http.createServer(app);
-  server.listen(PORT, () =>
-    console.log(`server up and running on port ${PORT}`)
-  );
+  setupDB().then(() => {
+    server.listen(PORT, () =>
+      console.log(`server up and running on port ${PORT}`)
+    );
+  }).catch(e => console.log(e.message))
+
 });
 
 process.on('SIGINT', () => { console.log("Bye bye!"); process.exit(); })
