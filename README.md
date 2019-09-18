@@ -29,7 +29,7 @@
 ## Prerequisites
 Make sure you have MongoDB installed on your local machine.
 
-You should also be running Node version 11.  If you do not have that installed you may use Node Version Manager ([https://github.com/nvm-sh/nvm]), or Docker ([https://www.docker.com/]) or simple install the correct version ([https://nodejs.org/en/])
+You should also be running Node version 11.  If you do not have that installed you may use Node Version Manager ([https://github.com/nvm-sh/nvm]), or Docker ([https://www.docker.com/]) or simply install the correct version ([https://nodejs.org/en/])
 
 
 ### Installation
