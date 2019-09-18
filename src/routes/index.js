@@ -31,7 +31,7 @@ router.post("/authenticate", jsonBodyParser, async (req, res) => {
     res.json({ message: "user authenticated", token });
   } catch (e) {
     res
-      .status(e instanceof LogicError ? 401 : 500)
+      .status(e instanceof LogicError ? 401 : 403)
       .json({ message: e.message });
   }
 });

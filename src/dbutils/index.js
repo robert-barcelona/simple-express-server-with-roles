@@ -25,10 +25,10 @@ export const setupDB = async () => {
     log(`finished dropping collections`);
 
     const clients = await getClientData();
-    log(`got client data ${clients.length}`);
+    log(`got client data, length = ${clients.length}`);
 
     const policies = await getPolicyData();
-    log(`got policy data ${policies.length}`);
+    log(`got policy data, length = ${policies.length}`);
 
     await processClients(clients);
     log(`processed clients`);
