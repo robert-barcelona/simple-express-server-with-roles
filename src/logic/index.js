@@ -8,17 +8,21 @@ export const logic = {
     return typeof value === "string" && value.length;
   },
 
-  async authenticate(email, password) {
+  /**
+   * No authentication for now because clients DB does not include passwords
+   *
+   */
+  async authenticate(email, password = "no authentication right now") {
     logger.debug(
       `authenticate,  CONTEXT: "logic/index.js", EMAIL:${email}, PASSWORD:${password}`
     );
     if (!validateEmail(email))
       throw new LogicError(`Email ${email} is not valid`);
-    if (!this._validateStringField(password))
-      throw new LogicError(`Password ${email} is not a valid string`);
+    //  if (!this._validateStringField(password))
+    // throw new LogicError(`Password ${email} is not a valid string`);
     const user = await Client.findOne({ email }, { _id: 0, __v: 0 }).exec();
     if (!user) throw new LogicError(`user with email ${email} does not exist`);
-    if (user.password !== password) throw new LogicError(`wrong password`);
+    // if (user.password !== password) throw new LogicError(`wrong password`);
     return user;
   },
 
@@ -78,8 +82,7 @@ export const logic = {
     );
     if (!this._validateStringField(policyNumber))
       throw new LogicError(`policyNumber ${policyNumber} is not valid`);
-    const id = +policyNumber;
-    const policy = await Policy.findOne({ id }, { _id: 0, __v: 0 }).exec();
+    const policy = await Policy.findOne({ id:policyNumber }, { _id: 0, __v: 0 }).exec();
     if (!policy)
       throw new LogicError(`policy number ${policyNumber} does not exist`);
     const user = await Client.findOne(

@@ -1,21 +1,40 @@
 import dotenv from "dotenv";
 import axios from "axios";
-
+import mongoose from "mongoose";
 import Client from "../models/Client";
 import Policy from "../models/Policy";
-
+import logger from "../utils/logger";
 dotenv.config();
+
+const log = logger.info;
 
 const { CLIENTS_URL, POLICIES_URL } = process.env;
 
 export const setupDB = async () => {
   try {
-    await Client.deleteMany({}).exec();
-    await Policy.deleteMany({}).exec();
+    const db = mongoose.connection;
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
+    const collectionNames = collections.map(col => col.name);
+
+    for (const name of collectionNames) {
+      db.dropCollection(name);
+      log(`dropped collection ${name}`);
+    }
+    log(`finished dropping collections`);
+
     const clients = await getClientData();
+    log(`got client data ${clients.length}`);
+
     const policies = await getPolicyData();
+    log(`got policy data ${policies.length}`);
+
     await processClients(clients);
+    log(`processed clients`);
+
     await processPolicies(policies);
+    log("processed policies");
   } catch (e) {
     throw new Error(`Error seeding DB: ${e.message}`);
   }

@@ -1,43 +1,42 @@
-import mongoose from "mongoose"
-import express from "express"
-import http from 'http'
-import cors from "cors"
-import routes from "./routes"
-import {setupDB} from "./dbutils"
-import {taskSetup} from "./helpers/scheduler"
-import dotenv from "dotenv"
-
+import mongoose from "mongoose";
+import express from "express";
+import cors from "cors";
+import routes from "./routes";
+import { setupDB } from "./dbutils";
+import { taskSetup } from "./helpers/scheduler";
+import dotenv from "dotenv";
+import logger from "./utils/logger";
 
 dotenv.config();
+mongoose.set("useCreateIndex", true);
 
 const {
-  env: {DATABASE_URL}
+  env: { DATABASE_URL, PORT, SERVICE_LOAD_INTERVAL = 600000 }
 } = process;
 
-const server = () => {
-
-  mongoose.connect(DATABASE_URL, {useNewUrlParser: true}, (err, _) => {
-    if (err) throw err;
-
-    const {PORT} = process.env;
-
+const server = async () => {
+  console.log("running server.js");
+  try {
+    await mongoose.connect(DATABASE_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     const app = express();
-
     app.use(cors());
-
     app.use("/api", routes());
+    await setupDB();
+    logger.info("setup db");
+    taskSetup(setupDB, SERVICE_LOAD_INTERVAL);
+    return new Promise(resolve => {
+      app.listen(PORT, () => {
+        console.log(`server up and running on port ${PORT}`);
+        resolve();
+      });
+    });
+  } catch (e) {
+    console.log(e);
+    logger.error(`Server Initialisation Error: ${e.message}`);
+  }
+};
 
-    const server = http.createServer(app);
-    setupDB()
-      .then(() => {
-        taskSetup(setupDB,600000);
-        server.listen(PORT, () =>
-          console.log(`server up and running on port ${PORT}`)
-        );
-      })
-      .catch(e => console.log(e.message));
-  });
-
-}
-
-export default server
+export default server;

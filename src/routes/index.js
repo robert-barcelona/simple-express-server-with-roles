@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import jwtexpress from "express-jwt";
 import logger from "../utils/logger";
 
-var guard = require("express-jwt-permissions")();
+const guard = require("express-jwt-permissions")();
 
 dotenv.config();
 const router = express.Router();
@@ -116,14 +116,5 @@ router.get(
   }
 );
 
-router.get(
-  "/",
-  jwtexpress({ secret: process.env.JWT_SECRET }),
-  guard.check("admin"),
-  async (req, res) => {
-    console.log(req.user);
-    res.status(200).send("ok");
-  }
-);
 
 export default () => router;
