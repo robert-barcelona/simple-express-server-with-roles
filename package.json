@@ -36,5 +36,8 @@
     "nodemon": "^1.19.2",
     "prettier": "^1.18.2",
     "regenerator-runtime": "^0.13.3"
-  }
+  },
+  "license": "MIT",
+  "name": "simple-express-server-with-roles",
+  "version": "0.1.0"
 }

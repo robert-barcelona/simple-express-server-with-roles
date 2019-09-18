@@ -11,7 +11,6 @@ const _validateStringField = value => {
 };
 
 export const getUserForUserName = async name => {
-  console.log("hit");
   if (!_validateStringField(name))
     throw new LogicError(`User name ${name} is not valid`);
 

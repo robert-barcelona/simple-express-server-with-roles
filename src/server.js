@@ -15,7 +15,6 @@ const {
 } = process;
 
 const server = async () => {
-  console.log("running server.js");
   try {
     await mongoose.connect(DATABASE_URL, {
       useNewUrlParser: true,

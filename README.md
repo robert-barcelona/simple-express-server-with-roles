@@ -39,7 +39,7 @@ You should also be running Node version 11.  If you do not have that installed y
 ```sh
 git clone https://github.com/robert-barcelona/simple-express-server-with-roles.git
 ```
-1b. 
+2. 
 Place the following code into an  `.env` file at root level if that file does not exist
 
 ```JS
@@ -53,19 +53,20 @@ SERVICE_LOAD_INTERVAL=600000
 
 ```
 
-2. Install NPM packages
+3. Install NPM packages
 ```sh
+cd simple-express-server-with-roles
 yarn
 ```
-3. Start MongoDB
+4. Start MongoDB
 ```sh
 mongodb
 ```
-4. Start the development server
+5. Start the development server
 ```sh
 yarn start
 ```
-5. The service will be served on localhost:4321
+6. The service will be served on localhost:4321
 
 
 
@@ -74,15 +75,16 @@ yarn start
 <p>This app chose to use a database (MongoDB) to cache the data.  It was thought that this approach -- although complicated for such a small amount of data -- would provide the speed, flexibility and ease of use that would scale easily in a larger, 'real world'application.</p>
 
 
-
 <p>On startup the application retrieves data from the two external data sources and caches the data in a local MongoDB database.  This data is retrieved by a 'logic' layer which interfaces between the database and the Express routes via Mongoose.  The data is periodically refreshed from the live data sources to ensure that it is always up-to-date (the frequency of refresh can be set in an environment variable).  This refresh is not necessary in this case but mimics a real life scenario. </p>
 <p>It would have also been possible to skip the DB caching and simply filter the data via JS itself, perhaps caching the retrieved data in Redis.  It was felt that a DB solution was more elegant and scalable.</p>
 
+<p>Note: a possible race condition could develop if an API route were called during DB refresh.  This would be simple to avoid, but the solution was not implemented since this is a sample application and it is not likely to occur with current parameters. </p>
 
 ### API routes available
 
 <h5>Note: all routes are prefaced with 'api/' and -- except for the 'authenticate' route -- require the JWT returned by 'authenticate' as Bearer Token</h5>
 
+<h5>A collection of sample Postman requests -- with JWT pre-fetched -- for the application API routes is available here: https://www.getpostman.com/collections/13bb27d186e9ac2b1054</h5>
 
 1. Authenticate: "/authenticate" -- example: http://localhost:4321/api/authenticate
 - method POST
@@ -92,7 +94,7 @@ yarn start
 - expects email (string) and password (string, min 6 chars) in body as raw `application/json` data
 ```JS
 {
-"email":"admin@admin.com",
+"email":"inesblankenship@quotezart.com",
 "password":"admin1"
 }	
 ```
