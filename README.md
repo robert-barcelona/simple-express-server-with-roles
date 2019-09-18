@@ -10,6 +10,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
   A simple Node/Express application to access two data sources ([https://mocky.io/v2/580891a4100000e8242b75c5] and [https://www.mocky.io/v2/5808862710000087232b75ac]) which represent client and policy data, cache those in a MongoDB, and provide APIs with which to access this data in a filtered manner with role authentication.
+  
+  <h6>Note: the folder '/data' is <i>not</i> used to populate the DB or to provide data for the API.  It is used only for mocking in tests.</h6>
 
 ### Built With
 
@@ -32,6 +34,12 @@ You should also be running Node version 11.  If you do not have that installed y
 
 ### Installation
 
+
+1. Clone the repo
+```sh
+git clone https://github.com/robert-barcelona/simple-express-server-with-roles.git
+```
+1b. 
 Place the following code into an  `.env` file at root level if that file does not exist
 
 ```JS
@@ -45,10 +53,6 @@ SERVICE_LOAD_INTERVAL=600000
 
 ```
 
-1. Clone the repo
-```sh
-git clone https://github.com/robert-barcelona/simple-express-server-with-roles.git
-```
 2. Install NPM packages
 ```sh
 yarn
@@ -62,6 +66,18 @@ mongodb
 yarn start
 ```
 5. The service will be served on localhost:4321
+
+
+
+## How it works
+
+<p>This app chose to use a database (MongoDB) to cache the data.  It was thought that this approach -- although complicated for such a small amount of data -- would provide the speed, flexibility and ease of use that would scale easily in a larger, 'real world'application.</p>
+
+
+
+<p>On startup the application retrieves data from the two external data sources and caches the data in a local MongoDB database.  This data is retrieved by a 'logic' layer which interfaces between the database and the Express routes via Mongoose.  The data is periodically refreshed from the live data sources to ensure that it is always up-to-date (the frequency of refresh can be set in an environment variable).  This refresh is not necessary in this case but mimics a real life scenario. </p>
+<p>It would have also been possible to skip the DB caching and simply filter the data via JS itself, perhaps caching the retrieved data in Redis.  It was felt that a DB solution was more elegant and scalable.</p>
+
 
 ### API routes available
 
@@ -121,13 +137,6 @@ yarn start
 
 The application runs under Node v11 and relies on Babel to translate the ESNext code to Node.  
 
-
-## How it works
-
-<p>This app chose to use a MongoDB, interfaced with the ORM Mongoose, to mock out a route that would offer greater speed and flexibility down the road and more closely mimic a real application and its functioning..</p>
-
-<p>On startup the application retrieves data from the two external data sources and caches the data in a local MongoDB database.  This data is retrieved by a 'logic' layer which interfaces between the database and the Express routes via Mongoose.  The data is periodically refreshed from the live data sources to ensure that it is always up-to-date (the frequency of refresh can be set in an environment variable).  This refresh is not necessary in this case but mimics a real life scenario. </p>
-<p>It would have also been possible to skip the DB caching and simply filter the data via JS itself, perhaps caching the retrieved data in Redis.  It was felt that a DB solution was more elegant and scalable.</p>
 
 ## Testing
 
